@@ -623,15 +623,18 @@
 </div>
 
 <!-- SDLC Form JavaScript -->
+<?php ob_start(); ?>
 <script>
 (function($) {
     'use strict';
     $(document).ready(function() {
         // Initialize datepickers
-        $('.datepicker').datepicker({
-            format: '<?= get_option('dateformat'); ?>',
-            autoclose: true
-        });
+        if (typeof $.fn.datepicker !== 'undefined') {
+            $('.datepicker').datepicker({
+                format: '<?= get_option('dateformat'); ?>',
+                autoclose: true
+            });
+        }
         
         // Dynamic item management
         var sdlcSections = [
@@ -682,11 +685,15 @@
             
             // Append and reinitialize
             $container.append($template);
-            $template.find('.selectpicker').selectpicker();
-            $template.find('.datepicker').datepicker({
-                format: '<?= get_option('dateformat'); ?>',
-                autoclose: true
-            });
+            if (typeof $.fn.selectpicker !== 'undefined') {
+                $template.find('.selectpicker').selectpicker();
+            }
+            if (typeof $.fn.datepicker !== 'undefined') {
+                $template.find('.datepicker').datepicker({
+                    format: '<?= get_option('dateformat'); ?>',
+                    autoclose: true
+                });
+            }
             
             updateRemoveButtons(section);
         });
@@ -713,3 +720,5 @@
     });
 })(jQuery);
 </script>
+<?php $sdlc_js = ob_get_clean(); ?>
+<?php hooks()->add_action('app_admin_footer', function() use ($sdlc_js) { echo $sdlc_js; }); ?>
