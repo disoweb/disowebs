@@ -367,7 +367,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label"><?= _l('dw_content'); ?></label>
-                                    <textarea name="sdlc_notes[0][content]" class="form-control" rows="4" placeholder="<?= _l('dw_note_content_placeholder'); ?>"></textarea>
+                                    <textarea name="sdlc_notes[0][content]" class="form-control tinymce sdlc-note-editor" rows="4" placeholder="<?= _l('dw_note_content_placeholder'); ?>"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -636,18 +636,28 @@
             });
         }
         
+        // Initialize TinyMCE editors in notes section
+        if (typeof init_editor === 'function') {
+            init_editor('.sdlc-note-editor', {height: 200});
+        }
+        
+        // Helper function to generate unique ID
+        function generateUniqueId() {
+            return 'sdlc_editor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+        
         // Dynamic item management
         var sdlcSections = [
-        { container: '#requirements-container', add: '#add-requirement', remove: '.remove-requirement', class: 'requirement-item', prefix: 'sdlc_requirements' },
-        { container: '#scope-container', add: '#add-scope', remove: '.remove-scope', class: 'scope-item', prefix: 'sdlc_scope' },
-        { container: '#commands-container', add: '#add-command', remove: '.remove-command', class: 'command-item', prefix: 'sdlc_commands' },
-        { container: '#prompts-container', add: '#add-prompt', remove: '.remove-prompt', class: 'prompt-item', prefix: 'sdlc_prompts' },
-        { container: '#checklists-container', add: '#add-checklist', remove: '.remove-checklist', class: 'checklist-item', prefix: 'sdlc_checklists' },
-        { container: '#notes-container', add: '#add-note', remove: '.remove-note', class: 'note-item', prefix: 'sdlc_notes' },
-        { container: '#docs-container', add: '#add-doc', remove: '.remove-doc', class: 'doc-item', prefix: 'sdlc_docs' },
-        { container: '#specs-container', add: '#add-spec', remove: '.remove-spec', class: 'spec-item', prefix: 'sdlc_specs' },
-        { container: '#estimates-container', add: '#add-estimate', remove: '.remove-estimate', class: 'estimate-item', prefix: 'sdlc_estimates' },
-        { container: '#stories-container', add: '#add-story', remove: '.remove-story', class: 'story-item', prefix: 'sdlc_stories' }
+        { container: '#requirements-container', add: '#add-requirement', remove: '.remove-requirement', class: 'requirement-item', prefix: 'sdlc_requirements', hasTinymce: false },
+        { container: '#scope-container', add: '#add-scope', remove: '.remove-scope', class: 'scope-item', prefix: 'sdlc_scope', hasTinymce: false },
+        { container: '#commands-container', add: '#add-command', remove: '.remove-command', class: 'command-item', prefix: 'sdlc_commands', hasTinymce: false },
+        { container: '#prompts-container', add: '#add-prompt', remove: '.remove-prompt', class: 'prompt-item', prefix: 'sdlc_prompts', hasTinymce: false },
+        { container: '#checklists-container', add: '#add-checklist', remove: '.remove-checklist', class: 'checklist-item', prefix: 'sdlc_checklists', hasTinymce: false },
+        { container: '#notes-container', add: '#add-note', remove: '.remove-note', class: 'note-item', prefix: 'sdlc_notes', hasTinymce: true },
+        { container: '#docs-container', add: '#add-doc', remove: '.remove-doc', class: 'doc-item', prefix: 'sdlc_docs', hasTinymce: false },
+        { container: '#specs-container', add: '#add-spec', remove: '.remove-spec', class: 'spec-item', prefix: 'sdlc_specs', hasTinymce: false },
+        { container: '#estimates-container', add: '#add-estimate', remove: '.remove-estimate', class: 'estimate-item', prefix: 'sdlc_estimates', hasTinymce: false },
+        { container: '#stories-container', add: '#add-story', remove: '.remove-story', class: 'story-item', prefix: 'sdlc_stories', hasTinymce: false }
     ];
     
     sdlcSections.forEach(function(section) {
@@ -656,7 +666,33 @@
             var $container = $(section.container);
             var $items = $container.find('.' + section.class);
             var newIndex = $items.length;
-            var $template = $items.first().clone();
+            
+            // For TinyMCE sections, we need to handle the editor specially
+            var $firstItem = $items.first();
+            var $template;
+            
+            if (section.hasTinymce) {
+                // Remove TinyMCE instance before cloning
+                var $editor = $firstItem.find('.sdlc-note-editor');
+                var editorId = $editor.attr('id');
+                if (editorId && typeof tinymce !== 'undefined' && tinymce.get(editorId)) {
+                    tinymce.get(editorId).save(); // Save content to textarea
+                }
+                
+                // Clone and process
+                $template = $firstItem.clone();
+                
+                // Remove TinyMCE wrapper elements from clone
+                $template.find('.tox-tinymce').remove();
+                $template.find('.mce-tinymce').remove();
+                
+                // Get the textarea and reset it
+                var $newEditor = $template.find('.sdlc-note-editor');
+                var newEditorId = generateUniqueId();
+                $newEditor.attr('id', newEditorId).val('').show().css('display', '');
+            } else {
+                $template = $firstItem.clone();
+            }
             
             // Update indices in names
             $template.attr('data-index', newIndex);
@@ -665,8 +701,8 @@
                 $(this).attr('name', name.replace(/\[\d+\]/, '[' + newIndex + ']'));
             });
             
-            // Update IDs
-            $template.find('[id]').each(function() {
+            // Update IDs (except TinyMCE editors which we already handled)
+            $template.find('[id]').not('.sdlc-note-editor').each(function() {
                 var id = $(this).attr('id');
                 $(this).attr('id', id.replace(/_\d+$/, '_' + newIndex));
             });
@@ -676,7 +712,7 @@
             });
             
             // Clear values
-            $template.find('input[type="text"], input[type="number"], textarea').val('');
+            $template.find('input[type="text"], input[type="number"], textarea').not('.sdlc-note-editor').val('');
             $template.find('input[type="checkbox"]').prop('checked', false);
             $template.find('select').val($template.find('select option:first').val());
             
@@ -695,6 +731,14 @@
                 });
             }
             
+            // Initialize TinyMCE for new editor
+            if (section.hasTinymce && typeof init_editor === 'function') {
+                var $newTinyMce = $template.find('.sdlc-note-editor');
+                if ($newTinyMce.length) {
+                    init_editor('#' + $newTinyMce.attr('id'), {height: 200});
+                }
+            }
+            
             updateRemoveButtons(section);
         });
         
@@ -702,7 +746,18 @@
         $(document).on('click', section.remove, function() {
             var $container = $(section.container);
             if ($container.find('.' + section.class).length > 1) {
-                $(this).closest('.' + section.class).remove();
+                var $item = $(this).closest('.' + section.class);
+                
+                // Remove TinyMCE instance if exists
+                if (section.hasTinymce) {
+                    var $editor = $item.find('.sdlc-note-editor');
+                    var editorId = $editor.attr('id');
+                    if (editorId && typeof tinymce !== 'undefined' && tinymce.get(editorId)) {
+                        tinymce.get(editorId).remove();
+                    }
+                }
+                
+                $item.remove();
                 updateRemoveButtons(section);
             }
         });
