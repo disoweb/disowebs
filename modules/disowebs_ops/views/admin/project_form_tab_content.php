@@ -624,15 +624,17 @@
 
 <!-- SDLC Form JavaScript -->
 <script>
-$(function() {
-    // Initialize datepickers
-    $('.datepicker').datepicker({
-        format: '<?= get_option('dateformat'); ?>',
-        autoclose: true
-    });
-    
-    // Dynamic item management
-    var sdlcSections = [
+(function($) {
+    'use strict';
+    $(document).ready(function() {
+        // Initialize datepickers
+        $('.datepicker').datepicker({
+            format: '<?= get_option('dateformat'); ?>',
+            autoclose: true
+        });
+        
+        // Dynamic item management
+        var sdlcSections = [
         { container: '#requirements-container', add: '#add-requirement', remove: '.remove-requirement', class: 'requirement-item', prefix: 'sdlc_requirements' },
         { container: '#scope-container', add: '#add-scope', remove: '.remove-scope', class: 'scope-item', prefix: 'sdlc_scope' },
         { container: '#commands-container', add: '#add-command', remove: '.remove-command', class: 'command-item', prefix: 'sdlc_commands' },
@@ -708,5 +710,6 @@ $(function() {
             }
         }
     });
-});
+    });
+})(jQuery);
 </script>
