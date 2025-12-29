@@ -1,0 +1,17 @@
+.detail_type_note {
+    font-style: italic;
+}
+
+/* Mobile: Hide Number column if empty */
+@media (max-width: 767px) {
+    .table-accounts thead th:first-child:empty,
+    .table-accounts tbody td:first-child:empty {
+        display: none;
+    }
+    
+    /* Hide Number column on mobile when it's just taking space */
+    .table-accounts th:first-child,
+    .table-accounts td:first-child {
+        display: none;
+    }
+}

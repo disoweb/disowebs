@@ -1,0 +1,60 @@
+# Perfex CRM .gitignore
+
+# Application config
+application/config/app-config.php
+
+# Logs
+application/logs/*
+!application/logs/index.html
+
+# Cache
+application/cache/*
+!application/cache/index.html
+
+# Uploads
+uploads/*
+!uploads/index.html
+!uploads/.htaccess
+
+# Media
+media/*
+!media/index.html
+
+# Temp
+temp/*
+!temp/index.html
+
+# Backups
+backups/*
+!backups/index.html
+
+# Vendor (if using composer locally)
+application/vendor/*
+!application/vendor/index.html
+
+# Node modules
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.log
+*.tmp
+
+# Migration files (temporary)
+modules/disowebs_ops/run_migrations.php
+modules/disowebs_ops/sdlc_tables.sql

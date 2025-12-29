@@ -1,0 +1,125 @@
+.div_content{
+	border: 1px solid silver;
+	padding: 15px;
+	margin-bottom: 10px;
+}
+
+/* Mobile Transaction Tabs - Horizontal Row */
+.mobile-transaction-tabs {
+    margin-bottom: 15px;
+    padding: 0 10px;
+}
+
+.transaction-tabs-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.transaction-tabs-row .tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 5px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #666;
+    font-size: 11px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    background: #fff;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.transaction-tabs-row .tab-item i {
+    font-size: 16px;
+    margin-bottom: 3px;
+}
+
+.transaction-tabs-row .tab-item.active {
+    background: #fff;
+    color: #84c529;
+    border: 2px solid #84c529;
+    box-shadow: 0 2px 8px rgba(132,197,41,0.2);
+}
+
+.transaction-tabs-row .tab-item:hover {
+    background: #fff;
+    color: #84c529;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.transaction-tabs-row .tab-item.filter-btn {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.transaction-tabs-row .tab-item.filter-btn.active-filter,
+.transaction-tabs-row .tab-item.filter-btn:hover {
+    background: #1976d2;
+    color: #fff;
+}
+
+.transaction-tabs-row .tab-item span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* Filter Row on Mobile */
+.filter-row {
+    padding: 10px 0;
+}
+
+/* Desktop: Always show filters */
+@media (min-width: 768px) {
+    .in-desktop {
+        display: block !important;
+        height: auto !important;
+    }
+    
+    .mobile-filter-toggle {
+        display: none !important;
+    }
+}
+
+/* Mobile: Collapsible filters */
+@media (max-width: 767px) {
+    .mobile-filters-collapse {
+        display: none;
+    }
+    
+    .mobile-filters-collapse.in {
+        display: block;
+        background: #f8f9fa;
+        padding: 15px;
+        margin: -15px -10px 15px -10px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .filter-row .col-xs-12 {
+        margin-bottom: 10px;
+    }
+    
+    .filter-row .col-xs-6 {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    
+    /* Make panel full width on mobile */
+    .col-md-9.col-xs-12 {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .panel_s .panel-body {
+        padding: 15px 10px;
+    }
+}

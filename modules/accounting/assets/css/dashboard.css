@@ -1,0 +1,95 @@
+div#bank_accounts {
+  max-height: 300px;
+  overflow: auto;
+}
+
+/* Mobile Responsive Fixes for Accounting Dashboard */
+@media (max-width: 767px) {
+    /* Bank accounts list - side by side with truncation */
+    #bank_accounts .list-group-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+    }
+    
+    #bank_accounts .list-group-item .acc-name {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-right: 10px;
+        font-size: 13px;
+    }
+    
+    #bank_accounts .list-group-item .badge {
+        float: none;
+        flex-shrink: 0;
+        font-size: 12px;
+        min-width: 60px;
+        text-align: right;
+        background-color: #e3f2fd;
+        color: #1976d2;
+    }
+    
+    /* Transaction table fixes */
+    #convert_status .table td,
+    #convert_status .table th {
+        padding: 8px 5px;
+        font-size: 13px;
+    }
+    
+    #convert_status .table {
+        font-size: 13px;
+    }
+    
+    /* Profit and Loss / Charts */
+    .minwidth310 {
+        min-width: auto !important;
+        width: 100%;
+    }
+    
+    #profit_and_loss,
+    #expenses_chart,
+    #income_chart,
+    #sales_chart {
+        min-width: 100% !important;
+        overflow-x: auto;
+    }
+    
+    /* Dashboard header */
+    .panel-body .row._buttons .col-md-6 {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .panel-body .row._buttons .col-md-6 h4 {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+    
+    .panel-body .row._buttons .btn-group.pull-right {
+        float: none !important;
+        display: block;
+        width: 100%;
+    }
+    
+    .panel-body .row._buttons .btn-group .btn {
+        width: 100%;
+        text-align: left;
+    }
+    
+    /* Two-column layout to single column */
+    .panel-body > .row > .col-md-6 {
+        width: 100%;
+        float: none;
+        border-right: none !important;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .panel-body > .row > .col-md-6:last-child {
+        border-bottom: none;
+    }
+}
