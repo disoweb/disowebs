@@ -1,0 +1,74 @@
+<?php
+
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class Dw_dev_templates_model extends App_Model
+{
+    private $table;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->table = db_prefix() . 'dw_dev_templates';
+    }
+
+    public function get($id)
+    {
+        $this->db->where('id', $id);
+        return $this->db->get($this->table)->row();
+    }
+
+    public function get_by_project($project_id, $type = null)
+    {
+        $this->db->where('project_id', $project_id);
+        if ($type) {
+            $this->db->where('type', $type);
+        }
+        $this->db->order_by('category', 'asc');
+        $this->db->order_by('created_at', 'asc');
+        return $this->db->get($this->table)->result_array();
+    }
+
+    public function get_ai_prompts($project_id)
+    {
+        return $this->get_by_project($project_id, 'ai_prompt');
+    }
+
+    public function add($data)
+    {
+        if (empty($data['project_id'])) {
+            return false;
+        }
+
+        $now = date('Y-m-d H:i:s');
+        $data['created_at'] = $now;
+        $data['updated_at'] = $now;
+
+        $this->db->insert($this->table, $data);
+        return $this->db->insert_id();
+    }
+
+    public function update($id, $data)
+    {
+        if (!$id) {
+            return false;
+        }
+
+        $data['updated_at'] = date('Y-m-d H:i:s');
+
+        $this->db->where('id', $id);
+        return $this->db->update($this->table, $data);
+    }
+
+    public function delete($id)
+    {
+        if (!$id) {
+            return false;
+        }
+
+        $this->db->where('id', $id);
+        $this->db->delete($this->table);
+
+        return $this->db->affected_rows() > 0;
+    }
+}

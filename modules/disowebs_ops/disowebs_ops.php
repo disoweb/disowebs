@@ -22,12 +22,17 @@ hooks()->add_action('admin_init', 'disowebs_ops_register_permissions');
 hooks()->add_action('admin_init', 'disowebs_ops_register_project_tabs');
 hooks()->add_action('admin_init', 'disowebs_ops_ensure_options');
 hooks()->add_action('after_add_project', 'disowebs_ops_handle_project_created');
+hooks()->add_action('after_add_project', 'disowebs_ops_handle_sdlc_data');
 hooks()->add_action('estimate_accepted', 'disowebs_ops_handle_estimate_accepted');
 hooks()->add_action('proposal_accepted', 'disowebs_ops_handle_proposal_accepted');
 hooks()->add_filter('get_dashboard_widgets', 'disowebs_ops_register_dashboard_widgets');
 hooks()->add_action('project_status_changed', 'disowebs_ops_handle_project_status_changed');
 hooks()->add_action('after_invoice_payment_recorded', 'disowebs_ops_handle_payment_recorded');
 hooks()->add_action('after_change_request_approved', 'disowebs_ops_handle_cr_approved');
+
+// Project form tabs (multi-step creation)
+hooks()->add_action('project_form_tabs', 'disowebs_ops_project_form_tabs');
+hooks()->add_action('project_form_tab_content', 'disowebs_ops_project_form_tab_content');
 
 // Cron jobs
 hooks()->add_action('cron_job', 'disowebs_ops_cron_handler');
@@ -1070,4 +1075,228 @@ function disowebs_ops_lead_qualification_fields($content)
     $hint .= '</div>';
     
     return $content . $hint;
+}
+
+/**
+ * Add SDLC tabs to project creation/edit form
+ */
+function disowebs_ops_project_form_tabs($project = null)
+{
+    if (!has_permission(DISOWEBS_OPS_MODULE_NAME, '', 'view')) {
+        return;
+    }
+    
+    $CI = &get_instance();
+    $CI->load->view('disowebs_ops/admin/project_form_tabs', ['project' => $project]);
+}
+
+/**
+ * Add SDLC tab content to project creation/edit form
+ */
+function disowebs_ops_project_form_tab_content($project = null)
+{
+    if (!has_permission(DISOWEBS_OPS_MODULE_NAME, '', 'view')) {
+        return;
+    }
+    
+    $CI = &get_instance();
+    $CI->load->view('disowebs_ops/admin/project_form_tab_content', ['project' => $project]);
+}
+
+/**
+ * Handle SDLC data when a project is created
+ */
+function disowebs_ops_handle_sdlc_data($project_id)
+{
+    $CI = &get_instance();
+    
+    // Process Requirements
+    if (isset($_POST['sdlc_requirements']) && is_array($_POST['sdlc_requirements'])) {
+        $CI->load->model('disowebs_ops/dw_project_requirements_model');
+        foreach ($_POST['sdlc_requirements'] as $req) {
+            if (!empty($req['title'])) {
+                $CI->dw_project_requirements_model->add([
+                    'project_id'  => $project_id,
+                    'title'       => $req['title'],
+                    'description' => $req['description'] ?? '',
+                    'priority'    => $req['priority'] ?? 'medium',
+                    'category'    => $req['category'] ?? 'functional',
+                    'status'      => 'pending',
+                    'added_by'    => get_staff_user_id()
+                ]);
+            }
+        }
+    }
+    
+    // Process Scope
+    if (isset($_POST['sdlc_scope']) && is_array($_POST['sdlc_scope'])) {
+        $CI->load->model('disowebs_ops/dw_scope_items_model');
+        foreach ($_POST['sdlc_scope'] as $scope) {
+            if (!empty($scope['title'])) {
+                $CI->dw_scope_items_model->add([
+                    'project_id' => $project_id,
+                    'title'      => $scope['title'],
+                    'content'    => $scope['content'] ?? '',
+                    'type'       => $scope['type'] ?? 'in_scope',
+                    'added_by'   => get_staff_user_id()
+                ]);
+            }
+        }
+    }
+    
+    // Process Terminal Commands
+    if (isset($_POST['sdlc_commands']) && is_array($_POST['sdlc_commands'])) {
+        $CI->load->model('disowebs_ops/dw_code_snippets_model');
+        foreach ($_POST['sdlc_commands'] as $cmd) {
+            if (!empty($cmd['title']) || !empty($cmd['command'])) {
+                $CI->dw_code_snippets_model->add([
+                    'project_id' => $project_id,
+                    'title'      => $cmd['title'] ?? 'Untitled Command',
+                    'content'    => $cmd['command'] ?? '',
+                    'language'   => $cmd['platform'] ?? 'bash',
+                    'category'   => $cmd['category'] ?? 'utility',
+                    'notes'      => $cmd['notes'] ?? '',
+                    'added_by'   => get_staff_user_id()
+                ]);
+            }
+        }
+    }
+    
+    // Process AI Prompts
+    if (isset($_POST['sdlc_prompts']) && is_array($_POST['sdlc_prompts'])) {
+        $CI->load->model('disowebs_ops/dw_dev_templates_model');
+        foreach ($_POST['sdlc_prompts'] as $prompt) {
+            if (!empty($prompt['title']) || !empty($prompt['content'])) {
+                $CI->dw_dev_templates_model->add([
+                    'project_id' => $project_id,
+                    'title'      => $prompt['title'] ?? 'Untitled Prompt',
+                    'content'    => $prompt['content'] ?? '',
+                    'type'       => 'ai_prompt',
+                    'category'   => $prompt['category'] ?? 'code_generation',
+                    'meta'       => json_encode(['model' => $prompt['model'] ?? 'any']),
+                    'added_by'   => get_staff_user_id()
+                ]);
+            }
+        }
+    }
+    
+    // Process Checklists
+    if (isset($_POST['sdlc_checklists']) && is_array($_POST['sdlc_checklists'])) {
+        $CI->load->model('disowebs_ops/dw_sdlc_checklists_model');
+        foreach ($_POST['sdlc_checklists'] as $checklist) {
+            if (!empty($checklist['title'])) {
+                $checklist_id = $CI->dw_sdlc_checklists_model->add([
+                    'project_id'  => $project_id,
+                    'title'       => $checklist['title'],
+                    'phase'       => $checklist['phase'] ?? 'development',
+                    'is_template' => isset($checklist['is_template']) ? 1 : 0,
+                    'added_by'    => get_staff_user_id()
+                ]);
+                
+                // Add checklist items
+                if ($checklist_id && !empty($checklist['items'])) {
+                    $CI->load->model('disowebs_ops/dw_checklist_items_model');
+                    $items = explode("\n", $checklist['items']);
+                    $position = 1;
+                    foreach ($items as $item) {
+                        $item = trim($item);
+                        if (!empty($item)) {
+                            $CI->dw_checklist_items_model->add([
+                                'checklist_id' => $checklist_id,
+                                'description'  => $item,
+                                'position'     => $position++
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // Process Dev Notes
+    if (isset($_POST['sdlc_notes']) && is_array($_POST['sdlc_notes'])) {
+        $CI->load->model('disowebs_ops/dw_dev_notes_model');
+        foreach ($_POST['sdlc_notes'] as $note) {
+            if (!empty($note['title']) || !empty($note['content'])) {
+                $CI->dw_dev_notes_model->add([
+                    'project_id' => $project_id,
+                    'title'      => $note['title'] ?? 'Untitled Note',
+                    'content'    => $note['content'] ?? '',
+                    'category'   => $note['category'] ?? 'general',
+                    'is_pinned'  => isset($note['is_pinned']) ? 1 : 0,
+                    'added_by'   => get_staff_user_id()
+                ]);
+            }
+        }
+    }
+    
+    // Process Documentation
+    if (isset($_POST['sdlc_docs']) && is_array($_POST['sdlc_docs'])) {
+        $CI->load->model('disowebs_ops/dw_project_docs_model');
+        foreach ($_POST['sdlc_docs'] as $doc) {
+            if (!empty($doc['title']) || !empty($doc['content'])) {
+                $CI->dw_project_docs_model->add([
+                    'project_id' => $project_id,
+                    'title'      => $doc['title'] ?? 'Untitled Document',
+                    'content'    => $doc['content'] ?? '',
+                    'type'       => $doc['type'] ?? 'readme',
+                    'version'    => $doc['version'] ?? '1.0.0',
+                    'added_by'   => get_staff_user_id()
+                ]);
+            }
+        }
+    }
+    
+    // Process Technical Specs
+    if (isset($_POST['sdlc_specs']) && is_array($_POST['sdlc_specs'])) {
+        $CI->load->model('disowebs_ops/dw_technical_specs_model');
+        foreach ($_POST['sdlc_specs'] as $spec) {
+            if (!empty($spec['title']) || !empty($spec['content'])) {
+                $CI->dw_technical_specs_model->add([
+                    'project_id' => $project_id,
+                    'title'      => $spec['title'] ?? 'Untitled Spec',
+                    'content'    => $spec['content'] ?? '',
+                    'category'   => $spec['category'] ?? 'architecture',
+                    'status'     => $spec['status'] ?? 'draft',
+                    'added_by'   => get_staff_user_id()
+                ]);
+            }
+        }
+    }
+    
+    // Process Time Estimates
+    if (isset($_POST['sdlc_estimates']) && is_array($_POST['sdlc_estimates'])) {
+        $CI->load->model('disowebs_ops/dw_time_estimates_model');
+        foreach ($_POST['sdlc_estimates'] as $estimate) {
+            if (!empty($estimate['phase'])) {
+                $CI->dw_time_estimates_model->add([
+                    'project_id'      => $project_id,
+                    'phase'           => $estimate['phase'],
+                    'estimated_hours' => $estimate['estimated_hours'] ?? 0,
+                    'start_date'      => !empty($estimate['start_date']) ? to_sql_date($estimate['start_date']) : null,
+                    'end_date'        => !empty($estimate['end_date']) ? to_sql_date($estimate['end_date']) : null,
+                    'notes'           => $estimate['notes'] ?? '',
+                    'added_by'        => get_staff_user_id()
+                ]);
+            }
+        }
+    }
+    
+    // Process User Stories
+    if (isset($_POST['sdlc_stories']) && is_array($_POST['sdlc_stories'])) {
+        $CI->load->model('disowebs_ops/dw_user_stories_model');
+        foreach ($_POST['sdlc_stories'] as $story) {
+            if (!empty($story['title']) || !empty($story['content'])) {
+                $CI->dw_user_stories_model->add([
+                    'project_id'          => $project_id,
+                    'title'               => $story['title'] ?? 'Untitled Story',
+                    'content'             => $story['content'] ?? '',
+                    'priority'            => $story['priority'] ?? 'medium',
+                    'acceptance_criteria' => $story['acceptance_criteria'] ?? '',
+                    'status'              => 'backlog',
+                    'added_by'            => get_staff_user_id()
+                ]);
+            }
+        }
+    }
 }

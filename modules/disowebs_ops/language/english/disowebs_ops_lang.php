@@ -1442,3 +1442,165 @@ $lang['disowebs_ops_create_first_spec'] = 'Create First Spec';
 $lang['disowebs_ops_spec_type'] = 'Specification Type';
 $lang['disowebs_ops_in_review'] = 'In Review';
 $lang['disowebs_ops_approved'] = 'Approved';
+
+// SDLC Project Form Tabs
+$lang['dw_requirements'] = 'Requirements';
+$lang['dw_scope'] = 'Scope';
+$lang['dw_terminal_commands'] = 'Commands';
+$lang['dw_ai_prompts'] = 'AI Prompts';
+$lang['dw_checklists'] = 'Checklists';
+$lang['dw_dev_notes'] = 'Dev Notes';
+$lang['dw_documentation'] = 'Documentation';
+$lang['dw_technical_specs'] = 'Tech Specs';
+$lang['dw_planning'] = 'Planning';
+
+// Requirements Tab
+$lang['dw_project_requirements'] = 'Project Requirements';
+$lang['dw_requirements_help'] = 'Define functional and non-functional requirements for the project.';
+$lang['dw_requirement_title'] = 'Requirement Title';
+$lang['dw_requirement_title_placeholder'] = 'e.g., User Authentication';
+$lang['dw_requirement_description_placeholder'] = 'Describe the requirement in detail...';
+$lang['dw_add_requirement'] = 'Add Requirement';
+$lang['dw_priority'] = 'Priority';
+$lang['dw_priority_low'] = 'Low';
+$lang['dw_priority_medium'] = 'Medium';
+$lang['dw_priority_high'] = 'High';
+$lang['dw_priority_critical'] = 'Critical';
+$lang['dw_category'] = 'Category';
+$lang['dw_functional'] = 'Functional';
+$lang['dw_non_functional'] = 'Non-Functional';
+$lang['dw_technical'] = 'Technical';
+$lang['dw_business'] = 'Business';
+$lang['dw_description'] = 'Description';
+
+// Scope Tab
+$lang['dw_scope_documents'] = 'Scope Documents';
+$lang['dw_scope_help'] = 'Document what is in scope, out of scope, assumptions, and constraints.';
+$lang['dw_scope_title'] = 'Title';
+$lang['dw_scope_title_placeholder'] = 'e.g., User Dashboard Module';
+$lang['dw_scope_type'] = 'Type';
+$lang['dw_in_scope'] = 'In Scope';
+$lang['dw_out_scope'] = 'Out of Scope';
+$lang['dw_assumption'] = 'Assumption';
+$lang['dw_constraint'] = 'Constraint';
+$lang['dw_scope_content_placeholder'] = 'Describe the scope item...';
+$lang['dw_add_scope_item'] = 'Add Scope Item';
+
+// Terminal Commands Tab
+$lang['dw_terminal_commands_help'] = 'Store commonly used terminal commands for this project.';
+$lang['dw_command_title'] = 'Command Name';
+$lang['dw_command_title_placeholder'] = 'e.g., Build Production';
+$lang['dw_platform'] = 'Platform';
+$lang['dw_command'] = 'Command';
+$lang['dw_command_placeholder'] = 'Enter terminal command...';
+$lang['dw_command_notes_placeholder'] = 'Optional notes about this command';
+$lang['dw_add_command'] = 'Add Command';
+$lang['dw_setup'] = 'Setup';
+$lang['dw_build'] = 'Build';
+$lang['dw_deploy'] = 'Deploy';
+$lang['dw_test'] = 'Test';
+$lang['dw_utility'] = 'Utility';
+$lang['dw_notes'] = 'Notes';
+
+// AI Prompts Tab
+$lang['dw_ai_prompts_help'] = 'Save AI prompts that are useful for this project.';
+$lang['dw_prompt_title'] = 'Prompt Title';
+$lang['dw_prompt_title_placeholder'] = 'e.g., Generate Unit Tests';
+$lang['dw_ai_model'] = 'AI Model';
+$lang['dw_prompt_content'] = 'Prompt';
+$lang['dw_prompt_content_placeholder'] = 'Enter the AI prompt...';
+$lang['dw_add_prompt'] = 'Add Prompt';
+$lang['dw_code_generation'] = 'Code Generation';
+$lang['dw_debugging'] = 'Debugging';
+$lang['dw_testing'] = 'Testing';
+$lang['dw_review'] = 'Review';
+
+// Checklists Tab
+$lang['dw_checklists_help'] = 'Create checklists for different project phases.';
+$lang['dw_checklist_title'] = 'Checklist Name';
+$lang['dw_checklist_title_placeholder'] = 'e.g., Pre-deployment Checklist';
+$lang['dw_phase'] = 'Phase';
+$lang['dw_phase_planning'] = 'Planning';
+$lang['dw_phase_design'] = 'Design';
+$lang['dw_phase_development'] = 'Development';
+$lang['dw_phase_testing'] = 'Testing';
+$lang['dw_phase_deployment'] = 'Deployment';
+$lang['dw_phase_review'] = 'Review';
+$lang['dw_is_template'] = 'Template?';
+$lang['dw_yes'] = 'Yes';
+$lang['dw_checklist_items'] = 'Checklist Items';
+$lang['dw_one_per_line'] = 'one per line';
+$lang['dw_checklist_items_placeholder'] = "Check database migrations\nVerify environment variables\nRun test suite\nReview security settings";
+$lang['dw_add_checklist'] = 'Add Checklist';
+
+// Dev Notes Tab
+$lang['dw_dev_notes_help'] = 'Quick notes for development reference.';
+$lang['dw_note_title'] = 'Note Title';
+$lang['dw_note_title_placeholder'] = 'e.g., API Rate Limiting';
+$lang['dw_general'] = 'General';
+$lang['dw_bug'] = 'Bug';
+$lang['dw_todo'] = 'Todo';
+$lang['dw_idea'] = 'Idea';
+$lang['dw_warning'] = 'Warning';
+$lang['dw_important'] = 'Important';
+$lang['dw_pinned'] = 'Pinned';
+$lang['dw_content'] = 'Content';
+$lang['dw_note_content_placeholder'] = 'Write your note...';
+$lang['dw_add_note'] = 'Add Note';
+
+// Documentation Tab
+$lang['dw_documentation_help'] = 'Create project documentation.';
+$lang['dw_doc_title'] = 'Document Title';
+$lang['dw_doc_title_placeholder'] = 'e.g., API Documentation';
+$lang['dw_doc_type'] = 'Document Type';
+$lang['dw_readme'] = 'README';
+$lang['dw_api_doc'] = 'API Documentation';
+$lang['dw_user_guide'] = 'User Guide';
+$lang['dw_installation'] = 'Installation Guide';
+$lang['dw_changelog'] = 'Changelog';
+$lang['dw_other'] = 'Other';
+$lang['dw_version'] = 'Version';
+$lang['dw_supported'] = 'supported';
+$lang['dw_doc_content_placeholder'] = '# Document Title\n\nStart writing your documentation here...';
+$lang['dw_add_documentation'] = 'Add Documentation';
+
+// Technical Specs Tab
+$lang['dw_technical_specs_help'] = 'Document technical specifications and architecture decisions.';
+$lang['dw_spec_title'] = 'Specification Title';
+$lang['dw_spec_title_placeholder'] = 'e.g., Database Schema Design';
+$lang['dw_spec_category'] = 'Category';
+$lang['dw_architecture'] = 'Architecture';
+$lang['dw_database'] = 'Database';
+$lang['dw_api'] = 'API';
+$lang['dw_security'] = 'Security';
+$lang['dw_performance'] = 'Performance';
+$lang['dw_infrastructure'] = 'Infrastructure';
+$lang['dw_status'] = 'Status';
+$lang['dw_draft'] = 'Draft';
+$lang['dw_in_review'] = 'In Review';
+$lang['dw_approved'] = 'Approved';
+$lang['dw_implemented'] = 'Implemented';
+$lang['dw_specification'] = 'Specification';
+$lang['dw_spec_content_placeholder'] = 'Document your technical specification...';
+$lang['dw_add_tech_spec'] = 'Add Tech Spec';
+
+// Planning Tab
+$lang['dw_planning_help'] = 'Plan project phases, time estimates, and user stories.';
+$lang['dw_time_estimates'] = 'Time Estimates';
+$lang['dw_phase_name'] = 'Phase Name';
+$lang['dw_phase_name_placeholder'] = 'e.g., Sprint 1';
+$lang['dw_estimated_hours'] = 'Est. Hours';
+$lang['dw_start_date'] = 'Start Date';
+$lang['dw_end_date'] = 'End Date';
+$lang['dw_select_date'] = 'Select date';
+$lang['dw_estimate_notes_placeholder'] = 'Notes about this phase...';
+$lang['dw_add_phase'] = 'Add Phase';
+$lang['dw_user_stories'] = 'User Stories';
+$lang['dw_story_title'] = 'Story Title';
+$lang['dw_story_title_placeholder'] = 'e.g., User Login Feature';
+$lang['dw_user_story_format'] = 'User Story';
+$lang['dw_story_placeholder'] = 'As a [type of user], I want [goal] so that [benefit]';
+$lang['dw_story_format_help'] = 'Format: As a [user], I want [goal] so that [benefit]';
+$lang['dw_acceptance_criteria'] = 'Acceptance Criteria';
+$lang['dw_acceptance_criteria_placeholder'] = "Given [context]\nWhen [action]\nThen [expected result]";
+$lang['dw_add_user_story'] = 'Add User Story';

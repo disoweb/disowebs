@@ -25,6 +25,7 @@
                                         <?= _l('project_settings'); ?>
                                     </a>
                                 </li>
+                                <?php hooks()->do_action('project_form_tabs', isset($project) ? $project : null); ?>
                             </ul>
                         </div>
                     </div>
@@ -465,6 +466,7 @@ foreach ($options as $option) { ?>
                                 <?php } ?>
                             </div>
                         </div>
+                        <?php hooks()->do_action('project_form_tab_content', isset($project) ? $project : null); ?>
                     </div>
                 </div>
                 <div class="panel-footer text-right">
